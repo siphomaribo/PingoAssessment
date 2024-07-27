@@ -10,14 +10,10 @@ namespace Pingo.WebAPI.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IClientService _clientService;
-        private readonly IClientAddressService _clientAddressService;
-        private readonly IClientContactService _clientContactService;
 
-        public ClientController(IClientService clientService, IClientAddressService clientAddressService, IClientContactService clientContactService)
+        public ClientController(IClientService clientService)
         {
             _clientService = clientService;
-            _clientAddressService = clientAddressService;
-            _clientContactService = clientContactService;
         }
 
         [HttpGet("{id}")]
@@ -62,20 +58,6 @@ namespace Pingo.WebAPI.Controllers
         {
             await _clientService.DeleteClientAsync(id);
             return NoContent();
-        }
-
-        [HttpGet("{id}/addresses")]
-        public async Task<ActionResult<IEnumerable<Address>>> GetClientAddresses(Guid id)
-        {
-            var addresses = await _clientAddressService.GetClientAddressesAsync(id);
-            return Ok(addresses);
-        }
-
-        [HttpGet("{id}/contacts")]
-        public async Task<ActionResult<IEnumerable<Contact>>> GetClientContacts(Guid id)
-        {
-            var contacts = await _clientContactService.GetClientContactsAsync(id);
-            return Ok(contacts);
         }
     }
 }

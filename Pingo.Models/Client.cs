@@ -6,7 +6,7 @@
         public string Name { get; set; }
         public string? Gender { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public List<Guid> AddressIds { get; set; } 
-        public List<Guid> ContactIds { get; set; }
+        public List<Address> Addresses { get; set; } 
+        public List<Contact> Contacts { get; set; }
     }
 }

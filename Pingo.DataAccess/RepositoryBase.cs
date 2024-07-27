@@ -2,6 +2,7 @@
 using Pingo.Abstraction.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace Pingo.DataAccess
@@ -10,6 +11,8 @@ namespace Pingo.DataAccess
     {
         protected readonly string _connectionString;
         protected readonly string _tableName;
+        protected SqlConnection _connection;
+        protected SqlTransaction _transaction;
 
         public RepositoryBase(string connectionString, string tableName)
         {
@@ -19,16 +22,14 @@ namespace Pingo.DataAccess
 
         public async Task AddAsync(T entity)
         {
-            await using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+            await using var connection = GetConnection();
             var command = BuildInsertCommand(entity, connection);
             await command.ExecuteNonQueryAsync();
         }
 
         public async Task DeleteAsync(T entity)
         {
-            await using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+            await using var connection = GetConnection();
             var command = new SqlCommand($"DELETE FROM {_tableName} WHERE Id = @Id", connection);
             command.Parameters.AddWithValue("@Id", GetIdFromEntity(entity));
             await command.ExecuteNonQueryAsync();
@@ -37,10 +38,13 @@ namespace Pingo.DataAccess
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             var entities = new List<T>();
-            await using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+
+            await using var connection = new SqlConnection(_connectionString);  
+            await connection.OpenAsync();  
+
             await using var command = new SqlCommand($"SELECT * FROM {_tableName}", connection);
             await using var reader = await command.ExecuteReaderAsync();
+
             while (await reader.ReadAsync())
             {
                 entities.Add(MapToEntity(reader));
@@ -50,8 +54,7 @@ namespace Pingo.DataAccess
 
         public async Task<T> GetByIdAsync(Guid id)
         {
-            await using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+            await using var connection = GetConnection();
             await using var command = new SqlCommand($"SELECT * FROM {_tableName} WHERE Id = @Id", connection);
             command.Parameters.AddWithValue("@Id", id);
             await using var reader = await command.ExecuteReaderAsync();
@@ -64,8 +67,7 @@ namespace Pingo.DataAccess
 
         public async Task UpdateAsync(T entity)
         {
-            await using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+            await using var connection = GetConnection();
             var command = BuildUpdateCommand(entity, connection);
             await command.ExecuteNonQueryAsync();
         }
@@ -93,7 +95,7 @@ namespace Pingo.DataAccess
                     values.Add($"@{prop.Name}");
                 }
             }
-            var command = new SqlCommand($"INSERT INTO {_tableName} ({string.Join(",", columns)}) VALUES ({string.Join(",", values)})", connection);
+            var command = new SqlCommand($"INSERT INTO {_tableName} ({string.Join(",", columns)}) VALUES ({string.Join(",", values)})", connection, _transaction);
             foreach (var prop in properties)
             {
                 if (prop.Name != "Id")
@@ -115,12 +117,23 @@ namespace Pingo.DataAccess
                     setClauses.Add($"{prop.Name} = @{prop.Name}");
                 }
             }
-            var command = new SqlCommand($"UPDATE {_tableName} SET {string.Join(",", setClauses)} WHERE Id = @Id", connection);
+            var command = new SqlCommand($"UPDATE {_tableName} SET {string.Join(",", setClauses)} WHERE Id = @Id", connection, _transaction);
             foreach (var prop in properties)
             {
                 command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
             }
             return command;
+        }
+
+        public void AssignTransaction(SqlConnection connection, SqlTransaction transaction)
+        {
+            _connection = connection;
+            _transaction = transaction;
+        }
+
+        private SqlConnection GetConnection()
+        {
+            return _connection ?? new SqlConnection(_connectionString);
         }
     }
 }

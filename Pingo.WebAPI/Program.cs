@@ -13,16 +13,18 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Register repositories with the connection string
-builder.Services.AddScoped<IClientRepository>(provider => new ClientRepository(connectionString));
-builder.Services.AddScoped<IAddressRepository>(provider => new AddressRepository(connectionString));
-builder.Services.AddScoped<IContactRepository>(provider => new ContactRepository(connectionString));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(provider =>
+{
+    return new UnitOfWork(
+        connectionString,
+        new ClientRepository(connectionString),
+        new AddressRepository(connectionString),
+        new ContactRepository(connectionString)
+    );
+});
 
 // Register services
 builder.Services.AddScoped<IClientService, ClientService>();
-builder.Services.AddScoped<IAddressService, AddressService>();
-builder.Services.AddScoped<IContactService, ContactService>();
-builder.Services.AddScoped<IClientAddressService, ClientAddressService>();
-builder.Services.AddScoped<IClientContactService, ClientContactService>();
 
 var app = builder.Build();
 
