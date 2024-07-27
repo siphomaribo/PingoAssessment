@@ -23,7 +23,7 @@ namespace Pingo.DataAccess
                 AddressType = (AddressTypeEnum)Enum.Parse(typeof(AddressTypeEnum), reader.GetString(reader.GetOrdinal("AddressType"))),
                 StreetAddress = reader.GetString(reader.GetOrdinal("StreetAddress")),
                 City = reader.GetString(reader.GetOrdinal("City")),
-                State = reader.GetString(reader.GetOrdinal("State")),
+                Province = reader.GetString(reader.GetOrdinal("State")),
                 PostalCode = reader.GetString(reader.GetOrdinal("PostalCode")),
                 Country = reader.GetString(reader.GetOrdinal("Country"))
             };

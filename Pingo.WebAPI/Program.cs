@@ -5,16 +5,17 @@ using Pingo.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register repositories
-builder.Services.AddScoped<IClientRepository, ClientRepository>();
-builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
+// Read the connection string from configuration
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Register repositories with the connection string
+builder.Services.AddScoped<IClientRepository>(provider => new ClientRepository(connectionString));
+builder.Services.AddScoped<IAddressRepository>(provider => new AddressRepository(connectionString));
+builder.Services.AddScoped<IContactRepository>(provider => new ContactRepository(connectionString));
 
 // Register services
 builder.Services.AddScoped<IClientService, ClientService>();
@@ -32,10 +33,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Enable CORS to allow any origin, method, and header
+app.UseCors(x => x
+           .AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader());
+
+
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

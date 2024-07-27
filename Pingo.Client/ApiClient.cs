@@ -6,7 +6,7 @@ public static class ApiClient
 {
     private static readonly HttpClient client = new HttpClient
     {
-        BaseAddress = new System.Uri("https://localhost:5001/api/") // Adjust the URL to your API base address
+        BaseAddress = new System.Uri("https://localhost:7261/api/") 
     };
 
     public static async Task<T> GetAsync<T>(string url)
