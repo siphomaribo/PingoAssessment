@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Services", "Pingo.Services\Pingo.Services.csproj", "{BA95A892-8A43-4843-8C36-425AFFB4D36A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pingo.Services", "Pingo.Services\Pingo.Services.csproj", "{BA95A892-8A43-4843-8C36-425AFFB4D36A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Abstraction.Interfaces", "Pingo.Abstraction.Interfaces\Pingo.Abstraction.Interfaces.csproj", "{1074F4FA-B3DA-40F9-8461-0E1A4EAAD092}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pingo.Abstraction.Interfaces", "Pingo.Abstraction.Interfaces\Pingo.Abstraction.Interfaces.csproj", "{1074F4FA-B3DA-40F9-8461-0E1A4EAAD092}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Models", "Pingo.Models\Pingo.Models.csproj", "{64B50259-6520-4D30-8CBF-5CE841EF78F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pingo.Models", "Pingo.Models\Pingo.Models.csproj", "{64B50259-6520-4D30-8CBF-5CE841EF78F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Tests", "Pingo.Tests\Pingo.Tests.csproj", "{8E2044D9-9041-4952-9920-867ECC6E1C38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pingo.Tests", "Pingo.Tests\Pingo.Tests.csproj", "{8E2044D9-9041-4952-9920-867ECC6E1C38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.WebAPI", "Pingo.WebAPI\Pingo.WebAPI.csproj", "{664547A5-0DAE-4566-AB25-AFC5AC696603}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pingo.WebAPI", "Pingo.WebAPI\Pingo.WebAPI.csproj", "{664547A5-0DAE-4566-AB25-AFC5AC696603}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.DataAccess", "Pingo.DataAccess\Pingo.DataAccess.csproj", "{F4AF0A9D-A6FF-42D1-8108-F5810F719588}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pingo.DataAccess", "Pingo.DataAccess\Pingo.DataAccess.csproj", "{F4AF0A9D-A6FF-42D1-8108-F5810F719588}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Client", "Pingo.Client\Pingo.Client.csproj", "{0806286D-1A91-4652-9200-AB1B004A79B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Client.Web", "Pingo.Client.Web\Pingo.Client.Web.csproj", "{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{0806286D-1A91-4652-9200-AB1B004A79B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0806286D-1A91-4652-9200-AB1B004A79B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0806286D-1A91-4652-9200-AB1B004A79B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

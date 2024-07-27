@@ -1,0 +1,68 @@
+﻿@page "/clients"
+@inject IWebClientService ClientService
+@using Pingo.Models
+@using System
+
+<h3>Client List</h3>
+
+@if (clients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in clients)
+            {
+                <tr>
+                    <td>@client.Name</td>
+                    <td>@client.Surname</td>
+                    <td>@client.Gender</td>
+                    <td>@client.DateOfBirth.ToString()</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => EditClient(client.Id)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteClient(client.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-success" @onclick="ExportCsv">Export CSV</button>
+}
+
+@code {
+    private List<Client> clients;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        clients = await ClientService.GetAllClientsAsync();
+    }
+
+    private void EditClient(Guid clientId)
+    {
+        // Navigate to the edit page or show edit modal
+    }
+
+    private async Task DeleteClient(Guid clientId)
+    {
+        await ClientService.DeleteClientAsync(clientId);
+        clients = await ClientService.GetAllClientsAsync(); // Refresh the list
+    }
+
+    private async Task ExportCsv()
+    {
+        await ClientService.ExportClientsToCsvAsync();
+        // You can provide user feedback or navigate to a different page if necessary
+    }
+}
