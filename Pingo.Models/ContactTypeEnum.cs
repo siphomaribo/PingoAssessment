@@ -8,6 +8,7 @@ namespace Pingo.Models
 {
     public enum ContactTypeEnum
     {
+        Unknown,
         Cell,
         Work,
         Home,

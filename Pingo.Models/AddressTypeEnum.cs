@@ -8,6 +8,7 @@ namespace Pingo.Models
 {
     public enum AddressTypeEnum
     {
+        Unknown,
         Residential,
         Work,
         Postal
