@@ -8,7 +8,9 @@ namespace Pingo.Models
 {
     public class Address
     {
-        public Guid Id { get; set; } 
+        public Guid Id { get; set; }
+
+        [IgnoreForSqlAttribute]
         public AddressTypeEnum AddressType { get; set; }
         public string StreetAddress { get; set; }
         public string City { get; set; }

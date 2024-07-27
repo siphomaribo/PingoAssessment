@@ -78,8 +78,7 @@ namespace Pingo.DataAccess
 
         public async Task UpdateAsync(T entity)
         {
-            await using var connection = GetConnection();
-            var command = BuildUpdateCommand(entity, connection);
+            var command = BuildUpdateCommand(entity);
             await command.ExecuteNonQueryAsync();
         }
 
@@ -119,9 +118,13 @@ namespace Pingo.DataAccess
         }
 
 
-        protected SqlCommand BuildUpdateCommand(T entity, SqlConnection connection)
+        protected SqlCommand BuildUpdateCommand(T entity)
         {
-            var properties = typeof(T).GetProperties();
+            var properties = typeof(T).GetProperties()
+                      .Where(prop => !Attribute.IsDefined(prop, typeof(IgnoreForSqlAttribute)))
+                       .ToArray();
+
+
             var setClauses = new List<string>();
             foreach (var prop in properties)
             {
@@ -130,7 +133,7 @@ namespace Pingo.DataAccess
                     setClauses.Add($"{prop.Name} = @{prop.Name}");
                 }
             }
-            var command = new SqlCommand($"UPDATE {_tableName} SET {string.Join(",", setClauses)} WHERE Id = @Id", connection, _transaction);
+            var command = new SqlCommand($"UPDATE {_tableName} SET {string.Join(",", setClauses)} WHERE Id = @Id", _connection, _transaction);
             foreach (var prop in properties)
             {
                 command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);

@@ -41,14 +41,9 @@ namespace Pingo.WebAPI.Controllers
             return CreatedAtAction(nameof(GetClientById), new { id = client.Id }, client);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateClient(Guid id, Client client)
+        [HttpPut]
+        public async Task<ActionResult> UpdateClient(Client client)
         {
-            if (id != client.Id)
-            {
-                return BadRequest();
-            }
-
             await _clientService.UpdateClientAsync(client);
             return NoContent();
         }

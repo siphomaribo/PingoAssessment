@@ -69,6 +69,25 @@ namespace Pingo.Services
             try
             {
                 await _unitOfWork.Clients.UpdateAsync(client);
+
+                if (client.Contacts != null)
+                {
+                    foreach (var contact in client.Contacts)
+                    {
+                        ValidateContact(contact);
+                        await _unitOfWork.Contacts.UpdateAsync(contact);
+                    }
+                }
+
+                if (client.Addresses != null)
+                {
+                    foreach (var address in client.Addresses)
+                    {
+                        ValidateAddress(address);
+                        await _unitOfWork.Addresses.UpdateAsync(address);
+                    }
+                }
+
                 await _unitOfWork.CompleteAsync();
             }
             catch

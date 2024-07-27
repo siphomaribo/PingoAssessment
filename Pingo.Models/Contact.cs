@@ -9,6 +9,7 @@ namespace Pingo.Models
     public class Contact
     {
         public Guid Id { get; set; }
+        [IgnoreForSqlAttribute]
         public ContactTypeEnum ContactType { get; set; }
         public string Value { get; set; }
     }
