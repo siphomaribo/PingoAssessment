@@ -34,6 +34,10 @@ namespace Pingo.DataAccess
 
         public void BeginTransaction()
         {
+            if (_transaction != null)
+            {
+                throw new InvalidOperationException("Transaction already started.");
+            }
             if (_connection.State == ConnectionState.Closed)
             {
                 _connection.Open();
@@ -44,9 +48,17 @@ namespace Pingo.DataAccess
 
         public void CommitTransaction()
         {
+            if (_transaction == null)
+            {
+                throw new InvalidOperationException("No transaction started.");
+            }
+            if (_transaction.Connection == null)
+            {
+                throw new InvalidOperationException("Transaction has already been committed or rolled back.");
+            }
             try
             {
-                _transaction?.Commit();
+                _transaction.Commit();
             }
             finally
             {
@@ -56,9 +68,17 @@ namespace Pingo.DataAccess
 
         public void RollbackTransaction()
         {
+            if (_transaction == null)
+            {
+                throw new InvalidOperationException("No transaction started.");
+            }
+            if (_transaction.Connection == null)
+            {
+                throw new InvalidOperationException("Transaction has already been committed or rolled back.");
+            }
             try
             {
-                _transaction?.Rollback();
+                _transaction.Rollback();
             }
             finally
             {
@@ -73,9 +93,22 @@ namespace Pingo.DataAccess
 
         public void Dispose()
         {
-            _transaction?.Dispose();
-            _connection?.Dispose();
+            if (_transaction != null)
+            {
+                _transaction.Dispose();
+                _transaction = null;
+            }
+            if (_connection != null)
+            {
+                if (_connection.State != ConnectionState.Closed)
+                {
+                    _connection.Close();
+                }
+                _connection.Dispose();
+                _connection = null;
+            }
         }
+
 
         private void AssignTransaction()
         {
@@ -92,12 +125,15 @@ namespace Pingo.DataAccess
                 contactRepo.AssignTransaction(_connection, _transaction);
             }
         }
-
         private async Task CommitTransactionAsync()
         {
+            if (_transaction == null)
+            {
+                throw new InvalidOperationException("No transaction started.");
+            }
             try
             {
-                await _transaction?.CommitAsync();
+                await _transaction.CommitAsync();
             }
             finally
             {

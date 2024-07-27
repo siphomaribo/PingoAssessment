@@ -1,8 +1,10 @@
 ﻿using Microsoft.Data.SqlClient;
 using Pingo.Abstraction.Interfaces;
+using Pingo.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Pingo.DataAccess
@@ -22,15 +24,24 @@ namespace Pingo.DataAccess
 
         public async Task AddAsync(T entity)
         {
-            await using var connection = GetConnection();
-            var command = BuildInsertCommand(entity, connection);
+            if (_connection == null || _transaction == null)
+            {
+                throw new InvalidOperationException("Transaction or connection is not set.");
+            }
+
+            var command = BuildInsertCommand(entity);
+
             await command.ExecuteNonQueryAsync();
         }
 
         public async Task DeleteAsync(T entity)
         {
-            await using var connection = GetConnection();
-            var command = new SqlCommand($"DELETE FROM {_tableName} WHERE Id = @Id", connection);
+            if (_connection == null || _transaction == null)
+            {
+                throw new InvalidOperationException("Transaction or connection is not set.");
+            }
+
+            var command = new SqlCommand($"DELETE FROM {_tableName} WHERE Id = @Id", _connection, _transaction);
             command.Parameters.AddWithValue("@Id", GetIdFromEntity(entity));
             await command.ExecuteNonQueryAsync();
         }
@@ -39,8 +50,8 @@ namespace Pingo.DataAccess
         {
             var entities = new List<T>();
 
-            await using var connection = new SqlConnection(_connectionString);  
-            await connection.OpenAsync();  
+            await using var connection = new SqlConnection(_connectionString);
+            await connection.OpenAsync();
 
             await using var command = new SqlCommand($"SELECT * FROM {_tableName}", connection);
             await using var reader = await command.ExecuteReaderAsync();
@@ -82,29 +93,31 @@ namespace Pingo.DataAccess
             return (Guid)entity.GetType().GetProperty("Id").GetValue(entity, null);
         }
 
-        protected SqlCommand BuildInsertCommand(T entity, SqlConnection connection)
+        protected SqlCommand BuildInsertCommand(T entity)
         {
-            var properties = typeof(T).GetProperties();
+            var properties = typeof(T).GetProperties()
+                   .Where(prop => !Attribute.IsDefined(prop, typeof(IgnoreForSqlAttribute)))
+                   .ToArray();
+
             var columns = new List<string>();
             var values = new List<string>();
+
             foreach (var prop in properties)
             {
-                if (prop.Name != "Id")
-                {
-                    columns.Add(prop.Name);
-                    values.Add($"@{prop.Name}");
-                }
+                columns.Add(prop.Name);
+                values.Add($"@{prop.Name}");
             }
-            var command = new SqlCommand($"INSERT INTO {_tableName} ({string.Join(",", columns)}) VALUES ({string.Join(",", values)})", connection, _transaction);
+
+            var command = new SqlCommand($"INSERT INTO {_tableName} ({string.Join(",", columns)}) VALUES ({string.Join(",", values)})", _connection, _transaction);
+
             foreach (var prop in properties)
             {
-                if (prop.Name != "Id")
-                {
-                    command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
-                }
+                command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
             }
+
             return command;
         }
+
 
         protected SqlCommand BuildUpdateCommand(T entity, SqlConnection connection)
         {

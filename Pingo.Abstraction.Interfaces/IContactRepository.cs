@@ -9,7 +9,6 @@ namespace Pingo.Abstraction.Interfaces
 {
     public interface IContactRepository : IRepositoryBase<Contact>
     {
-        Task<IEnumerable<Contact>> GetContactsByClientIdAsync(Guid clientId);
-
+        Task AddAsync(Contact contact, Guid clientId);
     }
 }

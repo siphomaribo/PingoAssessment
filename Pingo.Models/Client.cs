@@ -7,7 +7,9 @@
         public string Surname { get; set; }
         public string? Gender { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public List<Address> Addresses { get; set; } 
+        [IgnoreForSqlAttribute]
+        public List<Address> Addresses { get; set; }
+        [IgnoreForSqlAttribute]
         public List<Contact> Contacts { get; set; }
     }
 }

@@ -30,12 +30,16 @@ namespace Pingo.Services
 
             try
             {
+                client.Id = Guid.NewGuid();
+
+                await _unitOfWork.Clients.AddAsync(client);
+
                 if (client.Contacts != null)
                 {
                     foreach (var contact in client.Contacts)
                     {
                         ValidateContact(contact);
-                        await _unitOfWork.Contacts.AddAsync(contact);
+                        await _unitOfWork.Contacts.AddAsync(contact, client.Id);
                     }
                 }
 
@@ -44,14 +48,11 @@ namespace Pingo.Services
                     foreach (var address in client.Addresses)
                     {
                         ValidateAddress(address);
-                        await _unitOfWork.Addresses.AddAsync(address);
+                        await _unitOfWork.Addresses.AddAsync(address, client.Id);
                     }
                 }
 
-                client.Id = Guid.NewGuid();
-                await _unitOfWork.Clients.AddAsync(client);
                 await _unitOfWork.CompleteAsync();
-                _unitOfWork.CommitTransaction();
             }
             catch
             {
@@ -69,7 +70,6 @@ namespace Pingo.Services
             {
                 await _unitOfWork.Clients.UpdateAsync(client);
                 await _unitOfWork.CompleteAsync();
-                _unitOfWork.CommitTransaction();
             }
             catch
             {
@@ -88,9 +88,25 @@ namespace Pingo.Services
                 var client = await _unitOfWork.Clients.GetByIdAsync(clientId);
                 if (client != null)
                 {
+                    if (client.Contacts != null)
+                    {
+                        foreach (var contact in client.Contacts)
+                        {
+                            await _unitOfWork.Contacts.DeleteAsync(contact);
+                        }
+                    }
+
+                    if (client.Addresses != null)
+                    {
+                        foreach (var address in client.Addresses)
+                        {
+                            await _unitOfWork.Addresses.DeleteAsync(address);
+                        }
+                    }
+
                     await _unitOfWork.Clients.DeleteAsync(client);
+
                     await _unitOfWork.CompleteAsync();
-                    _unitOfWork.CommitTransaction();
                 }
             }
             catch
@@ -99,6 +115,8 @@ namespace Pingo.Services
                 throw;
             }
         }
+
+
 
         private void ValidateClient(Client client)
         {

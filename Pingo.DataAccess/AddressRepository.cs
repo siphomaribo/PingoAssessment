@@ -3,9 +3,11 @@ using Pingo.Abstraction.Interfaces;
 using Pingo.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Pingo.DataAccess
 {
@@ -13,6 +15,14 @@ namespace Pingo.DataAccess
     {
         public AddressRepository(string connectionString) : base(connectionString, "tblAddress")
         {
+        }
+
+        private async Task<Guid> GetAddressTypeIdAsync(AddressTypeEnum addressType)
+        {
+            var command = new SqlCommand("SELECT Id FROM tblAddressType WHERE Type = @Type", _connection, _transaction);
+            command.Parameters.AddWithValue("@Type", addressType.ToString());
+            var result = await command.ExecuteScalarAsync();
+            return (Guid)(result ?? Guid.Empty);
         }
 
         protected override Address MapToEntity(SqlDataReader reader)
@@ -29,22 +39,27 @@ namespace Pingo.DataAccess
             };
         }
 
-        public async Task<IEnumerable<Address>> GetAddressesByClientIdAsync(Guid clientId)
+        public async Task AddAsync(Address address, Guid clientId)
         {
-            var addresses = new List<Address>();
-            await using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
-            await using var command = new SqlCommand(@"
-                SELECT a.* FROM tblAddress a
-                INNER JOIN tblClientAddress ca ON a.Id = ca.AddressId
-                WHERE ca.ClientId = @ClientId", connection);
-            command.Parameters.AddWithValue("@ClientId", clientId);
-            await using var reader = await command.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-            {
-                addresses.Add(MapToEntity(reader));
-            }
-            return addresses;
+            var addressTypeId = await GetAddressTypeIdAsync(address.AddressType);
+
+            var command = BuildInsertCommand(address, clientId, addressTypeId);
+            await command.ExecuteNonQueryAsync();
         }
+
+        private SqlCommand BuildInsertCommand(Address address, Guid clientId, Guid addressTypeId)
+        {
+            var command = new SqlCommand($"INSERT INTO {_tableName} (Id, ClientId, AddressTypeId, StreetAddress, City, Province, PostalCode, Country) VALUES (@Id, @ClientId, @AddressTypeId, @StreetAddress, @City, @State, @PostalCode, @Country)", _connection, _transaction);
+            command.Parameters.AddWithValue("@Id", address.Id);
+            command.Parameters.AddWithValue("@ClientId", clientId);
+            command.Parameters.AddWithValue("@AddressTypeId", addressTypeId);
+            command.Parameters.AddWithValue("@StreetAddress", address.StreetAddress ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@City", address.City ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@State", address.Province ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@PostalCode", address.PostalCode ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Country", address.Country ?? (object)DBNull.Value);
+            return command;
+        }
+
     }
 }

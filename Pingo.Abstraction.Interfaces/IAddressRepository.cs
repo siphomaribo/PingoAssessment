@@ -9,7 +9,6 @@ namespace Pingo.Abstraction.Interfaces
 {
     public interface IAddressRepository : IRepositoryBase<Address>
     {
-        Task<IEnumerable<Address>> GetAddressesByClientIdAsync(Guid clientId);
-
+        Task AddAsync(Address address, Guid clientId);
     }
 }
