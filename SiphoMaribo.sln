@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Services", "Pingo.Services\Pingo.Services.csproj", "{BA95A892-8A43-4843-8C36-425AFFB4D36A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Abstraction.Interfaces", "Pingo.Abstraction.Interfaces\Pingo.Abstraction.Interfaces.csproj", "{1074F4FA-B3DA-40F9-8461-0E1A4EAAD092}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Models", "Pingo.Models\Pingo.Models.csproj", "{64B50259-6520-4D30-8CBF-5CE841EF78F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Tests", "Pingo.Tests\Pingo.Tests.csproj", "{8E2044D9-9041-4952-9920-867ECC6E1C38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.WebAPI", "Pingo.WebAPI\Pingo.WebAPI.csproj", "{664547A5-0DAE-4566-AB25-AFC5AC696603}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.DataAccess", "Pingo.DataAccess\Pingo.DataAccess.csproj", "{F4AF0A9D-A6FF-42D1-8108-F5810F719588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Client", "Pingo.Client\Pingo.Client.csproj", "{0806286D-1A91-4652-9200-AB1B004A79B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA95A892-8A43-4843-8C36-425AFFB4D36A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA95A892-8A43-4843-8C36-425AFFB4D36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA95A892-8A43-4843-8C36-425AFFB4D36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA95A892-8A43-4843-8C36-425AFFB4D36A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1074F4FA-B3DA-40F9-8461-0E1A4EAAD092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1074F4FA-B3DA-40F9-8461-0E1A4EAAD092}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1074F4FA-B3DA-40F9-8461-0E1A4EAAD092}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1074F4FA-B3DA-40F9-8461-0E1A4EAAD092}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64B50259-6520-4D30-8CBF-5CE841EF78F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64B50259-6520-4D30-8CBF-5CE841EF78F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64B50259-6520-4D30-8CBF-5CE841EF78F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64B50259-6520-4D30-8CBF-5CE841EF78F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E2044D9-9041-4952-9920-867ECC6E1C38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E2044D9-9041-4952-9920-867ECC6E1C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E2044D9-9041-4952-9920-867ECC6E1C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E2044D9-9041-4952-9920-867ECC6E1C38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{664547A5-0DAE-4566-AB25-AFC5AC696603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{664547A5-0DAE-4566-AB25-AFC5AC696603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{664547A5-0DAE-4566-AB25-AFC5AC696603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{664547A5-0DAE-4566-AB25-AFC5AC696603}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4AF0A9D-A6FF-42D1-8108-F5810F719588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4AF0A9D-A6FF-42D1-8108-F5810F719588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4AF0A9D-A6FF-42D1-8108-F5810F719588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4AF0A9D-A6FF-42D1-8108-F5810F719588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0806286D-1A91-4652-9200-AB1B004A79B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0806286D-1A91-4652-9200-AB1B004A79B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0806286D-1A91-4652-9200-AB1B004A79B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0806286D-1A91-4652-9200-AB1B004A79B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B4761106-497E-4986-A6F1-01307551989B}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pingo.Abstraction.Interfaces\Pingo.Abstraction.Interfaces.csproj" />
+    <ProjectReference Include="..\Pingo.Models\Pingo.Models.csproj" />
+  </ItemGroup>
+
+</Project>
