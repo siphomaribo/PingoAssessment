@@ -10,10 +10,11 @@ namespace Pingo.WebAPI.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IClientService _clientService;
-
-        public ClientController(IClientService clientService)
+        private readonly ICSvService _cSvService;
+        public ClientController(IClientService clientService, ICSvService cSvService)
         {
             _clientService = clientService;
+            _cSvService = cSvService;
         }
 
         [HttpGet("{id}")]
@@ -53,6 +54,21 @@ namespace Pingo.WebAPI.Controllers
         {
             await _clientService.DeleteClientAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("Export")]
+        public async Task<ActionResult> ExportCSv()
+        {
+            try
+            {
+                await _cSvService.ExportClientsToCsvAsync("clients_export.csv");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
         }
     }
 }

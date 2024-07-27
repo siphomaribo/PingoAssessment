@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Pingo.Abstraction.Interfaces
 {
-    public interface IClientRepository : IRepositoryBase<Client>
+    public interface ICSvService
     {
-        Task<IEnumerable<Client>> GetAllWithAddressOnlyAsync();
+        Task ExportClientsToCsvAsync(string filePath);
     }
 }

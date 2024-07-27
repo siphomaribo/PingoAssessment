@@ -22,6 +22,10 @@ namespace Pingo.Services
         {
             return await _unitOfWork.Clients.GetAllAsync();
         }
+        public Task<IEnumerable<Client>> GetAllClientsWithAddressesAsync()
+        {
+            return _unitOfWork.Clients.GetAllWithAddressOnlyAsync();
+        }
 
         public async Task AddClientAsync(Client client)
         {

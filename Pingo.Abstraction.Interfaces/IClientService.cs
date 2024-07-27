@@ -11,6 +11,7 @@ namespace Pingo.Abstraction.Interfaces
     {
         Task<Client> GetClientByIdAsync(Guid clientId);
         Task<IEnumerable<Client>> GetAllClientsAsync();
+        Task<IEnumerable<Client>> GetAllClientsWithAddressesAsync();
         Task AddClientAsync(Client client);
         Task UpdateClientAsync(Client client);
         Task DeleteClientAsync(Guid clientId);

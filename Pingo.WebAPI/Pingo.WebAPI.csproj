@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="clients_export.csv" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -14,6 +18,12 @@
     <ProjectReference Include="..\Pingo.Abstraction.Interfaces\Pingo.Abstraction.Interfaces.csproj" />
     <ProjectReference Include="..\Pingo.DataAccess\Pingo.DataAccess.csproj" />
     <ProjectReference Include="..\Pingo.Services\Pingo.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="clients_export.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

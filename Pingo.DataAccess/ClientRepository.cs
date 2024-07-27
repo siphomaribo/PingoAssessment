@@ -103,6 +103,70 @@ namespace Pingo.DataAccess
             return clientDictionary.Values;
         }
 
+        public async Task<IEnumerable<Client>> GetAllWithAddressOnlyAsync()
+        {
+            var clientDictionary = new Dictionary<Guid, Client>();
+
+            var query = @"
+        SELECT 
+            c.Id AS ClientId, c.Name, c.Surname, c.Gender, c.DateOfBirth,
+            a.Id AS AddressId, a.StreetAddress, a.City, a.Province, a.PostalCode, a.Country, att.Type AS AddressType
+        FROM tblClient c
+        LEFT JOIN tblAddress a ON c.Id = a.ClientId
+        LEFT JOIN tblAddressType att ON a.AddressTypeId = att.Id";
+
+            await using var connection = new SqlConnection(_connectionString);
+            await connection.OpenAsync();
+            await using var command = new SqlCommand(query, connection);
+            await using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var clientId = reader.GetGuid(reader.GetOrdinal("ClientId"));
+
+                if (!clientDictionary.TryGetValue(clientId, out var client))
+                {
+                    client = new Client
+                    {
+                        Id = clientId,
+                        Name = reader.GetString(reader.GetOrdinal("Name")),
+                        Surname = reader.GetString(reader.GetOrdinal("Surname")),
+                        Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? null : reader.GetString(reader.GetOrdinal("Gender")),
+                        DateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
+                        Contacts = new List<Contact>(),
+                        Addresses = new List<Address>()
+                    };
+                    clientDictionary[clientId] = client;
+                }
+
+                // Populate Addresses
+                if (!reader.IsDBNull(reader.GetOrdinal("AddressId")))
+                {
+                    var addressTypeString = reader.GetString(reader.GetOrdinal("AddressType"));
+                    AddressTypeEnum addressType;
+
+                    // Attempt to parse the contact type string into the enum
+                    if (!Enum.TryParse(addressTypeString, out addressType))
+                    {
+                        addressType = AddressTypeEnum.Unknown;
+                    }
+
+                    client.Addresses.Add(new Address
+                    {
+                        Id = reader.GetGuid(reader.GetOrdinal("AddressId")),
+                        StreetAddress = reader.GetString(reader.GetOrdinal("StreetAddress")),
+                        City = reader.GetString(reader.GetOrdinal("City")),
+                        Province = reader.GetString(reader.GetOrdinal("Province")),
+                        PostalCode = reader.GetString(reader.GetOrdinal("PostalCode")),
+                        Country = reader.GetString(reader.GetOrdinal("Country")),
+                        AddressType = addressType,
+                    });
+                }
+            }
+
+            return clientDictionary.Values;
+        }
+
         public async Task<Client> GetByIdAsync(Guid id)
         {
             var clientDictionary = new Dictionary<Guid, Client>();

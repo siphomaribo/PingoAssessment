@@ -23,8 +23,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(provider =>
     );
 });
 
-// Register services
+// Register services 
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<ICSvService, CSvService>();
 
 var app = builder.Build();
 
