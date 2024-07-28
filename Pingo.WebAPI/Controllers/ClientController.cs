@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Pingo.Abstraction.Interfaces;
 using Pingo.Models;
+using Pingo.Services;
 
 namespace Pingo.WebAPI.Controllers
 {
@@ -61,13 +62,22 @@ namespace Pingo.WebAPI.Controllers
         {
             try
             {
-                await _cSvService.ExportClientsToCsvAsync("clients_export.csv");
+                string fileName = "clients_export.csv";
+                string filePath = Path.Combine("Exports", fileName); 
+                await _cSvService.ExportClientsToCsvAsync(filePath);
 
-                return Ok();
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return NotFound(); // File not found
+                }
+
+                var bytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                return File(bytes, "application/octet-stream", fileName);
             }
             catch (Exception ex)
             {
-                return NoContent();
+                // Log the exception
+                return StatusCode(500, "Internal server error");
             }
         }
     }

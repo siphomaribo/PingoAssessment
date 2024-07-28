@@ -1,7 +1,8 @@
-﻿@page "/clients"
+﻿@page "/"
 @inject IWebClientService ClientService
 @using Pingo.Models
 @using System
+@inject IJSRuntime JSRuntime
 
 <h3>Add or Edit Client</h3>
 
@@ -200,6 +201,7 @@ else
     private async Task ExportCsv()
     {
         await ClientService.ExportClientsToCsvAsync();
-        // You can provide user feedback or navigate to a different page if necessary
+        // Trigger the download using JavaScript
+        await JSRuntime.InvokeVoidAsync("downloadFileFromUrl", "/clients/Export");
     }
 }

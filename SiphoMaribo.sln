@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pingo.WebAPI", "Pingo.WebAP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pingo.DataAccess", "Pingo.DataAccess\Pingo.DataAccess.csproj", "{F4AF0A9D-A6FF-42D1-8108-F5810F719588}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Client", "Pingo.Client\Pingo.Client.csproj", "{0806286D-1A91-4652-9200-AB1B004A79B4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pingo.Client.Web", "Pingo.Client.Web\Pingo.Client.Web.csproj", "{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}"
 EndProject
 Global
@@ -49,10 +47,6 @@ Global
 		{F4AF0A9D-A6FF-42D1-8108-F5810F719588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4AF0A9D-A6FF-42D1-8108-F5810F719588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4AF0A9D-A6FF-42D1-8108-F5810F719588}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0806286D-1A91-4652-9200-AB1B004A79B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0806286D-1A91-4652-9200-AB1B004A79B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0806286D-1A91-4652-9200-AB1B004A79B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0806286D-1A91-4652-9200-AB1B004A79B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B6D9417-2604-48DF-BD10-7A9F2214C0C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
