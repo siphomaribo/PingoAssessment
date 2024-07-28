@@ -3,6 +3,90 @@
 @using Pingo.Models
 @using System
 
+<h3>Add or Edit Client</h3>
+
+<EditForm Model="@client" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" />
+
+    <div class="form-group">
+        <label>Name:</label>
+        <InputText @bind-Value="client.Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Surname:</label>
+        <InputText @bind-Value="client.Surname" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Gender:</label>
+        <InputText @bind-Value="client.Gender" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Date of Birth:</label>
+        <InputDate @bind-Value="client.DateOfBirth" class="form-control" />
+    </div>
+
+    <h4>Addresses</h4>
+    @foreach (var address in client?.Addresses ?? new List<Address>())
+    {
+        <div class="form-group">
+            <label>Address Type:</label>
+            <InputSelect @bind-Value="address.AddressType" class="form-control">
+                @foreach (Models.AddressTypeEnum type in Enum.GetValues(typeof(Models.AddressTypeEnum)))
+                {
+                    <option value="@type">@type</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="form-group">
+            <label>Street Address:</label>
+            <InputText @bind-Value="address.StreetAddress" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>City:</label>
+            <InputText @bind-Value="address.City" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Province:</label>
+            <InputText @bind-Value="address.Province" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Postal Code:</label>
+            <InputText @bind-Value="address.PostalCode" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Country:</label>
+            <InputText @bind-Value="address.Country" class="form-control" />
+        </div>
+        <button type="button" class="btn btn-danger mb-2" @onclick="() => RemoveAddress(address.Id)">Remove</button>
+    }
+    <button type="button" class="btn btn-primary mb-3" @onclick="AddAddress">Add Address</button>
+
+    <h4>Contacts</h4>
+    @foreach (var contact in client?.Contacts ?? new List<Contact>())
+    {
+        <div class="form-group">
+            <label>Contact Type:</label>
+            <InputSelect @bind-Value="contact.ContactType" class="form-control">
+                @foreach (Models.ContactTypeEnum type in Enum.GetValues(typeof(Models.ContactTypeEnum)))
+                {
+                    <option value="@type">@type</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="form-group">
+            <label>Value:</label>
+            <InputText @bind-Value="contact.Value" class="form-control" />
+        </div>
+        <button type="button" class="btn btn-danger mb-2" @onclick="() => RemoveContact(contact.Id)">Remove</button>
+    }
+    <button type="button" class="btn btn-primary mb-3" @onclick="AddContact">Add Contact</button>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Save</button>
+    </div>
+</EditForm>
+
 <h3>Client List</h3>
 
 @if (clients == null)
@@ -22,16 +106,16 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var client in clients)
+            @foreach (var clientItem in clients)
             {
                 <tr>
-                    <td>@client.Name</td>
-                    <td>@client.Surname</td>
-                    <td>@client.Gender</td>
-                    <td>@client.DateOfBirth.ToString()</td>
+                    <td>@clientItem.Name</td>
+                    <td>@clientItem.Surname</td>
+                    <td>@clientItem.Gender</td>
+                    <td>@clientItem.DateOfBirth.ToString()</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="() => EditClient(client.Id)">Edit</button>
-                        <button class="btn btn-danger" @onclick="() => DeleteClient(client.Id)">Delete</button>
+                        <button class="btn btn-primary" @onclick="() => EditClient(clientItem.Id)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteClient(clientItem.Id)">Delete</button>
                     </td>
                 </tr>
             }
@@ -41,17 +125,70 @@ else
 }
 
 @code {
+    private Client client = new Client();
     private List<Client> clients;
 
     protected override async Task OnInitializedAsync()
     {
-
         clients = await ClientService.GetAllClientsAsync();
     }
 
-    private void EditClient(Guid clientId)
+    private void AddAddress()
     {
-        // Navigate to the edit page or show edit modal
+        if (client.Addresses == null)
+        {
+            client.Addresses = new List<Address>();
+        }
+
+        client.Addresses.Add(new Address());
+    }
+
+    private void RemoveAddress(Guid addressId)
+    {
+        var address = client.Addresses.FirstOrDefault(a => a.Id == addressId);
+        if (address != null)
+        {
+            client.Addresses.Remove(address);
+        }
+    }
+
+    private void AddContact()
+    {
+        if (client.Contacts == null)
+        {
+            client.Contacts = new List<Contact>();
+        }
+
+        client.Contacts.Add(new Contact());
+    }
+
+    private void RemoveContact(Guid contactId)
+    {
+        var contact = client.Contacts.FirstOrDefault(c => c.Id == contactId);
+        if (contact != null)
+        {
+            client.Contacts.Remove(contact);
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (client.Id == Guid.Empty)
+        {
+            await ClientService.AddClientAsync(client);
+        }
+        else
+        {
+            await ClientService.UpdateClientAsync(client);
+        }
+
+        client = new Client();  // Reset the form
+        clients = await ClientService.GetAllClientsAsync(); // Refresh the list
+    }
+
+    private async Task EditClient(Guid clientId)
+    {
+        client = await ClientService.GetClientByIdAsync(clientId);
     }
 
     private async Task DeleteClient(Guid clientId)
